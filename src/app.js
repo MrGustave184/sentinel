@@ -12,8 +12,6 @@ app.use(express.static(path.join(__dirname, '../public')));
 
 // Run on connection
 io.on('connection', socket => {
-    console.log('new socket connection');
-
     // Emit message on new conenction
     socket.emit('message', 'Success');
 
@@ -26,7 +24,10 @@ io.on('connection', socket => {
     // Broadcast on disconnection
     socket.on('disconnect', () => {
         socket.broadcast.emit('message', 'User leaves');
-    })
+    });
+
+    // Listen for blur event
+    socket.on('blurEvent', msg => console.log(msg));
 });
 
 const PORT = process.env.PORT || 3000;
