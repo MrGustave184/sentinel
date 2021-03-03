@@ -1,5 +1,17 @@
 const socket = new io();
 
+let random = Math.floor(Math.random() * 2); 
+
+const clients = ['isuog', 'shocklogic'];
+const projects = ['0100', 'test'];
+
+const user = {
+    client: clients[random],
+    project: projects[random]
+}
+
+socket.emit('newUser', user);
+
 socket.on('message', message => {
     console.log(message);
 });
