@@ -23,7 +23,7 @@ if (typeof document.hidden !== "undefined") { // Opera 12.10 and Firefox 18 and 
     visibilityChange = "webkitvisibilitychange";
 }
 
-function handleVisibilityChange() {
+const handleVisibilityChange = () => {
     if (document[hidden]) {
         notifyBlur();
     }
