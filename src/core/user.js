@@ -12,4 +12,6 @@ registerUser = (id, clientId, projectId) => {
     return user;
 }
 
-module.exports = { registerUser };
+getUsers = () => { return users; }
+
+module.exports = { registerUser, getUsers };

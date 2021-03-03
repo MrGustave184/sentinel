@@ -2,7 +2,7 @@ const path = require('path');
 const http = require('http');
 const express = require('express');
 const socketio = require('socket.io');
-const { registerUser } = require('./core/user');
+const { registerUser, getUsers } = require('./core/user');
 
 const app = express();
 const server = http.createServer(app);
@@ -25,12 +25,14 @@ io.on('connection', socket => {
 
         socket.join(room);
 
-        socket.emit('message', user);
+        const users = getUsers();
+
+        socket.emit('message', users);
 
         // Broadcast (everyone but the new client)
-        socket.broadcast.to(room).emit('message', 'New user arrives!');
+        socket.broadcast.to(room).emit('message', user);
     });
-    
+
     // To everyone
     // io.emit()
     
