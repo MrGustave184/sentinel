@@ -1,4 +1,5 @@
-const socket = io("https://sentinel.shocklogic.com");
+const socket = io();
+// const socket = io("https://sentinel.shocklogic.com");
 
 let random = Math.floor(Math.random() * 2); 
 
