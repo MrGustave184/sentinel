@@ -1,17 +1,22 @@
-const users = [];
+const users = {};
 
-registerUser = (id, clientId, projectId) => {
+registerUser = ({id, client, project, room}) => {
     const user = {
         id,
-        clientId,
-        projectId
+        client,
+        project,
+        room
     }
 
-    users.push(user);
+    if(! users.hasOwnProperty(room)) {
+    	users[room] = [];
+    }
+
+    users[room].push(user);
 
     return user;
 }
 
-getUsers = () => { return users; }
+getUsers = (room) => users[room];
 
 module.exports = { registerUser, getUsers };

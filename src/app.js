@@ -1,31 +1,46 @@
-const path = require('path');
-const http = require('http');
-const express = require('express');
-const socketio = require('socket.io');
 const { registerUser, getUsers } = require('./core/user');
+const app = require("express")();
+const cors = require("cors")
 
-const app = express();
-const server = http.createServer(app);
-const io = socketio(server);
+app.use(cors())
 
-// Set static folder
-app.use(express.static(path.join(__dirname, '../public')));
+const httpServer = require("http").createServer(app);
+const options = {
+	cors: {
+		origin: [
+			"http://localhost:3000/",
+			"http://localhost:3000",
+			"https://clients.shocklogic.com/",
+			"https://clients.shocklogic.com"
+		],
+		allowedHeaders: ["access-control-allow-origin"],
+		extraHeaders: {
+		   	"access-control-allow-origin": "*"
+		},
+		methods: ["GET", "POST"]
+	}
+};
+const io = require("socket.io")(httpServer, options);
 
-// Run on connection
-io.on('connection', socket => {
+
+io.on("connection", socket => { 
     socket.on('newUser', ({ client, project }) => {
 
-        let room = `${client}-${project}`;
+        let room = `${client}_${project}`;
 
         const user = registerUser({
             id: socket.id,
             client,
-            project
+            project,
+            room
         });
+
+        // console.log(user);
 
         socket.join(room);
 
-        const users = getUsers();
+        // pass room to filter!
+        const users = getUsers(room);
 
         socket.emit('message', users);
 
@@ -33,18 +48,8 @@ io.on('connection', socket => {
         socket.broadcast.to(room).emit('message', user);
     });
 
-    // To everyone
-    // io.emit()
-    
-    // Broadcast on disconnection
-    socket.on('disconnect', () => {
-        socket.broadcast.emit('message', 'User leaves');
-    });
-
-    // Listen for blur event
-    // socket.on('blurEvent', msg => console.log(msg));
 });
 
-const PORT = process.env.PORT || 3000;
-
-server.listen(PORT, () => console.log(`server running on port: ${PORT}`));
+httpServer.listen(3000, () => {
+	console.log('Listening');
+});
