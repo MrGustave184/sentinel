@@ -1,23 +1,19 @@
 const { registerUser, getUsers } = require('./core/user');
+const path = require('path');
 
-const app = require("express")();
-const cors = require("cors")
-app.use(cors())
+const express = require("express");
+const app = express();
+
+// Set static folder
+app.use(express.static(path.join(__dirname, '../public')));
 
 const httpServer = require("http").createServer(app);
 const options = {
 	cors: {
 		origin: [
-			"http://localhost:3000/",
 			"http://localhost:3000",
-			"https://clients.shocklogic.com/",
 			"https://clients.shocklogic.com"
-		],
-		allowedHeaders: ["access-control-allow-origin"],
-		extraHeaders: {
-		   	"access-control-allow-origin": "*"
-		},
-		methods: ["GET", "POST"]
+		]
 	}
 };
 
