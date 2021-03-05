@@ -1,6 +1,6 @@
 const users = {};
 
-registerUser = ({id, client, project, room}) => {
+const registerUser = ({id, client, project, room}) => {
     const user = {
         id,
         client,
@@ -17,6 +17,15 @@ registerUser = ({id, client, project, room}) => {
     return user;
 }
 
-getUsers = (room) => users[room];
+const getUsers = (room) => users[room];
 
-module.exports = { registerUser, getUsers };
+const broadcastUsers = (room, id) => {
+
+    if(users[room].lenght > 0) {
+        return users[room].filter((user) => user.id !== id)
+    }
+
+    return room;
+}
+
+module.exports = { registerUser, getUsers, broadcastUsers };

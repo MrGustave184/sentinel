@@ -1,3 +1,15 @@
+const displayUser = (user) => {
+    const div = document.createElement("div");
+    div.classList.add('sentinel-user', 'm-3', 'p-2');
+    div.innerHTML = user.client;
+    div.setAttribute('data-id', user.id)
+    document.querySelector(".sentinel-top").appendChild(div);
+}
+
+const displayUsers = (users) => {
+    users?.forEach(user => displayUser(user));
+}
+
 const socket = io();
 // const socket = io("https://sentinel.shocklogic.com");
 
@@ -16,6 +28,9 @@ socket.emit('newUser', user);
 socket.on('message', message => {
     console.log(message);
 });
+
+socket.on('welcome', users => displayUsers(users));
+socket.on('userArrived', user => displayUser(user));
 
 const notifyBlur = () => {
     socket.emit('blurEvent', 'user inactive');    

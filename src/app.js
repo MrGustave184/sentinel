@@ -1,4 +1,4 @@
-const { registerUser, getUsers } = require('./core/user');
+const { registerUser, getUsers, broadcastUsers } = require('./core/user');
 const path = require('path');
 
 const express = require("express");
@@ -28,17 +28,17 @@ io.on("connection", socket => {
             id: socket.id,
             client,
             project,
-            room
+            room,
         });
 
         socket.join(room);
 
-        const users = getUsers(room);
-
-        socket.emit('message', users);
+        const users = getUsers(room).filter(user => user.id !== socket.id);;
+        
+        socket.emit('welcome', users);
 
         // Broadcast (everyone but the new client) by room
-        socket.broadcast.to(room).emit('message', user);
+        socket.broadcast.to(room).emit('userArrived', user);
     });
 });
 
