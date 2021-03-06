@@ -46,7 +46,7 @@ io.on("connection", socket => {
         
         if(user) {
             removeUser(user.id);
-            console.log(getUsers());
+
             socket.broadcast.to(user.room).emit('userLeaves', user);
         }
     });

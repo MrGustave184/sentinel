@@ -33,7 +33,10 @@ socket.on('welcome', users => displayUsers(users));
 socket.on('userArrived', user => displayUser(user));
 socket.on('userLeaves', user => {
     let userDiv = document.querySelector("[data-id='"+ user.id +"']");
-    userDiv.remove();
+
+    if(userDiv) {
+        userDiv.remove();
+    }
 });
 
 const notifyBlur = () => {
