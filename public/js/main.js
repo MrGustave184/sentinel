@@ -31,6 +31,10 @@ socket.on('message', message => {
 
 socket.on('welcome', users => displayUsers(users));
 socket.on('userArrived', user => displayUser(user));
+socket.on('userLeaves', user => {
+    let userDiv = document.querySelector("[data-id='"+ user.id +"']");
+    userDiv.remove();
+});
 
 const notifyBlur = () => {
     socket.emit('blurEvent', 'user inactive');    

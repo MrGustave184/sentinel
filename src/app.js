@@ -1,4 +1,4 @@
-const { registerUser, getUsers, broadcastUsers } = require('./core/user');
+const { registerUser, getUsers, broadcastUsers, findUser, removeUser } = require('./core/user');
 const path = require('path');
 
 const express = require("express");
@@ -39,6 +39,16 @@ io.on("connection", socket => {
 
         // Broadcast (everyone but the new client) by room
         socket.broadcast.to(room).emit('userArrived', user);
+    });
+
+    socket.on('disconnect', () => {
+        const user = findUser(socket.id);
+        
+        if(user) {
+            removeUser(user.id);
+            console.log(getUsers());
+            socket.broadcast.to(user.room).emit('userLeaves', user);
+        }
     });
 });
 
