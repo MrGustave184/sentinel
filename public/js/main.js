@@ -1,7 +1,10 @@
 const displayUser = (user) => {
+    let divHtml = `${user.client}
+    <span class="sentinel-hover">${user.project}</span>`;
+
     const div = document.createElement("div");
     div.classList.add('sentinel-user', 'm-3', 'p-2');
-    div.innerHTML = user.client;
+    div.innerHTML = divHtml;
     div.setAttribute('data-id', user.id)
     document.querySelector(".sentinel-top").appendChild(div);
 }
@@ -10,8 +13,8 @@ const displayUsers = (users) => {
     users?.forEach(user => displayUser(user));
 }
 
-// const socket = io();
-const socket = io("https://sentinel.shocklogic.com");
+const socket = io();
+// const socket = io("https://sentinel.shocklogic.com");
 
 let random = Math.floor(Math.random() * 2); 
 
