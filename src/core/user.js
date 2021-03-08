@@ -7,9 +7,6 @@ const registerUser = (user) => {
     }
 
    let repeated = users[user.room].filter(arrayUser => arrayUser.shocklogicId == user.shocklogicId);
-   console.log(repeated.length);
-
-    // let repeated = users[user.room].filter(arrayUser => arrayUser.shocklogicId == user.shocklogicId);
 
     if(repeated.length == 0) {
         users[user.room].push(user);
