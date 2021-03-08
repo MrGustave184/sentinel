@@ -12,7 +12,8 @@ const options = {
 	cors: {
 		origin: [
 			"http://localhost:3000",
-			"https://clients.shocklogic.com"
+			"https://clients.shocklogic.com",
+            "https://dev.shocklogic.com"
 		]
 	}
 };
@@ -20,25 +21,20 @@ const options = {
 const io = require("socket.io")(httpServer, options);
 
 io.on("connection", socket => { 
-    socket.on('newUser', ({ client, project }) => {
+    socket.on('newUser', (user) => {
+        const room = `${user.client}_${user.project}`;
 
-        const room = `${client}_${project}`;
+        user.room = room.toLowerCase();
+        socket.join(user.room);
 
-        const user = registerUser({
-            id: socket.id,
-            client,
-            project,
-            room,
-        });
+        user = registerUser(user);
 
-        socket.join(room);
-
-        const users = getUsers(room).filter(user => user.id !== socket.id);;
+        const users = getUsers(user.room).filter(user => user.id !== socket.id);
         
         socket.emit('welcome', users);
 
         // Broadcast (everyone but the new client) by room
-        socket.broadcast.to(room).emit('userArrived', user);
+        socket.broadcast.to(user.room).emit('userArrived', user);
     });
 
     socket.on('disconnect', () => {

@@ -1,18 +1,12 @@
 const users = {};
 
-const registerUser = ({id, client, project, room}) => {
-    const user = {
-        id,
-        client,
-        project,
-        room
+const registerUser = (user) => {
+
+    if(! users.hasOwnProperty(user.room)) {
+    	users[user.room] = [];
     }
 
-    if(! users.hasOwnProperty(room)) {
-    	users[room] = [];
-    }
-
-    users[room].push(user);
+    users[user.room].push(user);
 
     return user;
 }
@@ -35,7 +29,6 @@ const findUser = (id) => {
         const index = users[room].findIndex(user => user.id == id);
 
         if(index !== -1) {
-            // console.log(users[room][index]);
             return users[room][index];
         }
     }
