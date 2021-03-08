@@ -25,16 +25,20 @@ io.on("connection", socket => {
         const room = `${user.client}_${user.project}`;
 
         user.room = room.toLowerCase();
+        user.id = socket.id;
+
         socket.join(user.room);
 
         user = registerUser(user);
 
-        const users = getUsers(user.room).filter(user => user.id !== socket.id);
-        
-        socket.emit('welcome', users);
+        if(user) {
+            const users = getUsers(user.room).filter(user => user.id !== socket.id);
+            
+            socket.emit('welcome', users);
 
-        // Broadcast (everyone but the new client) by room
-        socket.broadcast.to(user.room).emit('userArrived', user);
+            // Broadcast (everyone but the new client) by room
+            socket.broadcast.to(user.room).emit('userArrived', user);
+        }
     });
 
     socket.on('disconnect', () => {

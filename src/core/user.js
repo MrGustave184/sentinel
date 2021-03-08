@@ -6,9 +6,17 @@ const registerUser = (user) => {
     	users[user.room] = [];
     }
 
-    users[user.room].push(user);
+   let repeated = users[user.room].filter(arrayUser => arrayUser.shocklogicId == user.shocklogicId);
+   console.log(repeated.length);
 
-    return user;
+    // let repeated = users[user.room].filter(arrayUser => arrayUser.shocklogicId == user.shocklogicId);
+
+    if(repeated.length == 0) {
+        users[user.room].push(user);
+        return user;
+    }
+
+    return false;
 }
 
 const getUsers = (room) => {
