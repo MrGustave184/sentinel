@@ -1,6 +1,44 @@
+const emitUser = async () => {
+
+    let jmuser = JSON.parse(localStorage.getItem('userLogged'));
+
+    let response = await fetch("https://dev.shocklogic.com/v2/api/jmuser", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            id: jmuser.userId,
+            client: jmuser.clientId
+        })
+    });
+
+    response = await response.json();
+
+    let rawUser = response.user[0];
+
+    let firstName = rawUser.First_Name || 'User';
+    let familyName = rawUser.Family_Name || '';
+
+    const user = {
+        shocklogicId: rawUser.JMUser_Id,
+        client: sentinelClient,
+        project: sentinelProject,
+        name: `${firstName} ${familyName}`,
+        email: rawUser.EMail,
+        avatar: rawUser.Avatar
+    }
+
+    socket.emit('newUser', user);
+}
+
 const displayUser = (user) => {
     let divHtml = `${user.client}
-    <span class="sentinel-hover">${user.project}</span>`;
+    <span class="sentinel-hover">
+        <div>${user.shocklogicId}</div>
+        <div>${user.name}</div>
+        <div>${user.email}</div> 
+    </span>`;
 
     const div = document.createElement("div");
     div.classList.add('sentinel-user', 'm-3', 'p-2');
@@ -13,20 +51,10 @@ const displayUsers = (users) => {
     users?.forEach(user => displayUser(user));
 }
 
-const socket = io();
-// const socket = io("https://sentinel.shocklogic.com");
+// const socket = io();
+const socket = io("https://sentinel.shocklogic.com");
 
-let random = Math.floor(Math.random() * 2); 
-
-const clients = ['isuog', 'shocklogic'];
-const projects = ['0100', 'test'];
-
-const user = {
-    client: clients[random],
-    project: projects[random]
-}
-
-socket.emit('newUser', user);
+emitUser()
 
 socket.on('message', message => {
     console.log(message);
