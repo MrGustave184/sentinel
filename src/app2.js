@@ -20,7 +20,6 @@ const io = socketio(server);
 // 	// res.json({ msg: 'hello world' });
 // })
 
-// Run on connection
 io.on('connection', socket => {
     socket.on('newUser', ({ client, project }) => {
 
